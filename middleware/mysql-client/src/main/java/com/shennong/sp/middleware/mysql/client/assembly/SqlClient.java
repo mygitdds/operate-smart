@@ -1,0 +1,46 @@
+package com.shennong.sp.middleware.mysql.client.assembly;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.asyncsql.MySQLClient;
+import io.vertx.ext.sql.SQLClient;
+import java.util.HashMap;
+import java.util.Map;
+
+public class SqlClient {
+    private static SqlClient sqlClient = null;
+    private  Map<String,SQLClient> sqlClientMap = new HashMap<>();
+    private SqlClient() {
+
+    }
+    public static SqlClient getInstance() {
+        if (sqlClient == null) {
+            sqlClient = new SqlClient();
+        }
+        return sqlClient;
+    }
+    //装client的map
+    public void builderSqlClient(JSONArray dataSource,Vertx vertx){
+        //拿到vert.x
+        //解析出一个对象循环创建
+        for(int i=0;i<dataSource.size();i++){
+            JSONObject jsonObject =dataSource.getJSONObject(i);
+            JsonObject mySQLClientConfig = new JsonObject().put("host", jsonObject.get("host"))
+                    .put("port",jsonObject.get("port"))
+                    .put("username",jsonObject.get("username"))
+                    .put("password",jsonObject.get("password"))
+                    .put("database",jsonObject.get("database"))
+                    .put("maxPoolSize",jsonObject.get("maxPoolSize"))
+                    .put("connectTimeout",jsonObject.get("connectTimeout"))
+                    .put("queryTimeout",jsonObject.get("queryTimeout"));
+            SQLClient mySQLClient = MySQLClient.createShared(vertx, mySQLClientConfig);
+            sqlClientMap.put(jsonObject.getString("database"),mySQLClient);
+        }
+    }
+
+
+    public  SQLClient getSqlClient(String database){
+        return sqlClientMap.get(database);
+    }
+}
