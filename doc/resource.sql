@@ -1,0 +1,116 @@
+
+-- 类目表
+CREATE TABLE t_smart_goods_category(
+`id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+`name` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '类目名称',
+`p_id` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '父类目id',
+`enterprise_id` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '企业id',
+`insert_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
+`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+ PRIMARY KEY (`id`)
+)ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='类目表';
+
+-- 商品表
+CREATE TABLE t_smart_goods(
+`id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+`good_name` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '商品名称',
+`good_price` DOUBLE NOT NULL DEFAULT '' COMMENT '商品价格',
+`img` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '商品图片',
+`enterprise_id` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '企业id',
+`category`  BIGINT(20) NOT NULL DEFAULT '0' COMMENT '类目id',
+`brief_introduction` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '商品简介',
+`insert_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
+`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+ PRIMARY KEY (`id`)
+)ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='类目表';
+
+-- 主资源
+CREATE TABLE `t_smart_resource` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `enterprise_id` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '企业id',
+  `img` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '外部资源图片',
+  `resource_id` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '外部资源id',
+  `resource_name` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '资源名称',
+  `type` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '1实物，2非实物，资源类型',
+  `stock_manager` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '1开启,2关闭，库存管理',
+  `operator` VARCHAR(250) NOT NULL DEFAULT '' COMMENT '操作者',
+  `total` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '总数量',
+  `grant_num` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '发放数量',
+  `invalid_num` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '失效数量',
+  `verify_num` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '核销数量',
+  `insert_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_key` (`enterprise_id`,`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='主资源表'
+
+CREATE TABLE `t_smart_batch_code` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `resource_id` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '主资源id',
+  `verify_type` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '核销类型 1 consumer,2 terminal',
+  `claim_rules` VARCHAR(200) NOT NULL DEFAULT '' COMMENT '规则-采用json',
+  `code_number` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '卷码数量',
+  `grant_type` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '发放方式 1api,2export',
+  `brush_count` TINYINT(20) NOT NULL DEFAULT '0' COMMENT '防刷次数',
+  `lock_time` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '锁定时间',
+  `grant_num` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '发放数量',
+  `invalid_num` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '失效数量',
+  `verify_num` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '核销数量',
+  `insert_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='批次表'
+
+
+CREATE TABLE `t_smart_code` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `batch_code_id` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '批次表id',
+  `enterprise_id` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '企业id',
+  `resource_id` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '主资源id',
+  `code` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '被扫的卷码',
+  `code_status` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '卷码状态 1,已发放，2已核销，3无效 0 初始化状态',
+  `verify_time` TIMESTAMP NOT NULL DEFAULT '1970-01-01 080001' COMMENT '核销时间',
+  `insert_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `edition` TINYINT(20) NOT NULL DEFAULT '0' COMMENT '版本号',
+  `executor` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '操作者，看是否操作，实质性的拿到了该卷',
+  PRIMARY KEY (`id`,`enterprise_id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='卷码表'
+
+
+CREATE TABLE `t_smart_grant_code_record` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `code_id` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '卷码id',
+  `winning_number` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '中奖标识',
+  `prize_id` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '奖品id',
+  `open_id` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '中奖C端用户的openid',
+  `phoneNumber` VARCHAR(11) NOT NULL DEFAULT '' COMMENT '中奖C端用户的手机号码',
+  `prize_type` VARCHAR(11) NOT NULL DEFAULT '' COMMENT '兑奖类型',
+  `activity_id` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '活动id',
+  `business_party` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '业务方：例如uma',
+  `reason` VARCHAR(400) NOT NULL DEFAULT '' COMMENT '发放原因',
+  `verify_time` TIMESTAMP NOT NULL DEFAULT '1970-01-01 080001' COMMENT '核销时间',
+  `resource_name` VARCHAR(40) NOT NULL DEFAULT '' COMMENT '核销资源名称',
+  `code` VARCHAR(40) NOT NULL DEFAULT '' COMMENT '被扫的卷码',
+  `examine_name` VARCHAR(40) NOT NULL DEFAULT '' COMMENT '核销员的名称',
+  `examine_phone` VARCHAR(11) NOT NULL DEFAULT '' COMMENT '核销员的手机号码',
+  `cashPrize_phone` VARCHAR(11) NOT NULL DEFAULT '' COMMENT '领取人手机号码',
+  `insert_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_key` (`id`,`code_id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='发卷表记录表'
+
+CREATE TABLE `t_smart_goods_group` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `enterprise_id` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '企业id',
+  `product_name` VARCHAR(30) NOT NULL DEFAULT '' COMMENT '商品组名称',
+  `goods_list` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '商品列表',
+  `price` DECIMAL(5,2) NOT NULL DEFAULT '0.00' COMMENT '商品组价格',
+  `insert_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_key` (`id`,`enterprise_id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='产品表'
+
+
