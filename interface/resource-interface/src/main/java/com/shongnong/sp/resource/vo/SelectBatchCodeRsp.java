@@ -6,10 +6,16 @@ import lombok.Data;
 
 import java.util.List;
 @Data
-@DataObject
-public class SelectBatchCodeRsp extends OperationJson {
-    public  SelectBatchCodeRsp(JsonObject jsonObject){
-        this.jsonObject = jsonObject;
+@DataObject(generateConverter = true)
+public class SelectBatchCodeRsp {
+    public SelectBatchCodeRsp(JsonObject obj){
+
+        SelectBatchCodeRspConverter.fromJson(obj, this);
+    }
+    public JsonObject toJson(){
+        JsonObject json = new JsonObject();
+        SelectBatchCodeRspConverter.toJson(this, json);
+        return json;
     }
     private List<BatchCode> batchCodeList;
 }

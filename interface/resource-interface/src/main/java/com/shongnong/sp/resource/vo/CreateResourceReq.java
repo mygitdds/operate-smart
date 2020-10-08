@@ -4,11 +4,17 @@ import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
 
+
+@DataObject(generateConverter = true)
 @Data
-@DataObject
-public class CreateResourceReq extends OperationJson {
-    public CreateResourceReq(JsonObject jsonObject){
-        this.jsonObject = jsonObject;
+public class CreateResourceReq {
+    public CreateResourceReq(JsonObject obj){
+        CreateResourceReqConverter.fromJson(obj, this);
+    }
+    public JsonObject toJson(){
+        JsonObject json = new JsonObject();
+        CreateResourceReqConverter.toJson(this, json);
+        return json;
     }
     /**
      * 企业id

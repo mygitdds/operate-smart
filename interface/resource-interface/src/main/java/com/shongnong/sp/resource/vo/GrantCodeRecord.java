@@ -6,10 +6,16 @@ import lombok.ToString;
 
 
 @Data
-@DataObject
-public class GrantCodeRecord extends OperationJson {
-    public  GrantCodeRecord(JsonObject jsonObject){
-        this.jsonObject = jsonObject;
+@DataObject(generateConverter = true)
+public class GrantCodeRecord {
+    public GrantCodeRecord(JsonObject obj){
+
+        GrantCodeRecordConverter.fromJson(obj, this);
+    }
+    public JsonObject toJson(){
+        JsonObject json = new JsonObject();
+        GrantCodeRecordConverter.toJson(this, json);
+        return json;
     }
     /**
      * 自增id

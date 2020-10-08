@@ -5,10 +5,15 @@ import io.vertx.core.json.JsonObject;
 import lombok.Data;
 
 @Data
-@DataObject
-public class CreateCategoryReq extends OperationJson {
-    public  CreateCategoryReq(JsonObject jsonObject){
-        this.jsonObject = jsonObject;
+@DataObject(generateConverter = true)
+public class CreateCategoryReq  {
+    public CreateCategoryReq(JsonObject obj){
+        CreateCategoryReqConverter.fromJson(obj, this);
+    }
+    public JsonObject toJson(){
+        JsonObject json = new JsonObject();
+        CreateCategoryReqConverter.toJson(this, json);
+        return json;
     }
     private String name;
     private Long pid;

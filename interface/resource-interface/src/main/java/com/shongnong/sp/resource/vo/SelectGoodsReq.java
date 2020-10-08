@@ -5,10 +5,16 @@ import io.vertx.core.json.JsonObject;
 import lombok.Data;
 
 @Data
-@DataObject
-public class SelectGoodsReq extends OperationJson{
-    public  SelectGoodsReq(JsonObject jsonObject){
-        this.jsonObject = jsonObject;
+@DataObject(generateConverter = true)
+public class SelectGoodsReq {
+    public SelectGoodsReq(JsonObject obj){
+
+        SelectGoodsReqConverter.fromJson(obj, this);
+    }
+    public JsonObject toJson(){
+        JsonObject json = new JsonObject();
+        SelectGoodsReqConverter.toJson(this, json);
+        return json;
     }
     private String goodName;
     private Long enterpriseId;

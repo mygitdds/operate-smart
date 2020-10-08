@@ -5,11 +5,17 @@ import io.vertx.core.json.JsonObject;
 import lombok.Data;
 
 import java.util.List;
-@DataObject
+@DataObject(generateConverter = true)
 @Data
-public class BatchCodeList extends OperationJson {
-    public  BatchCodeList(JsonObject jsonObject){
-        this.jsonObject = jsonObject;
+public class BatchCodeList {
+    public BatchCodeList(JsonObject obj){
+
+        BatchCodeListConverter.fromJson(obj, this);
+    }
+    public JsonObject toJson(){
+        JsonObject json = new JsonObject();
+        BatchCodeListConverter.toJson(this, json);
+        return json;
     }
     private List<BatchCode> batchCodeList;
 }

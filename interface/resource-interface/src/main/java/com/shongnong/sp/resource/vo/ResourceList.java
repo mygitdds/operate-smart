@@ -6,11 +6,17 @@ import lombok.Data;
 
 import java.util.List;
 
-@DataObject
+@DataObject(generateConverter = true)
 @Data
-public class ResourceList extends OperationJson {
-    public ResourceList(JsonObject jsonObject){
-        this.jsonObject = jsonObject;
+public class ResourceList {
+    public ResourceList(JsonObject obj){
+
+        ResourceListConverter.fromJson(obj, this);
+    }
+    public JsonObject toJson(){
+        JsonObject json = new JsonObject();
+        ResourceListConverter.toJson(this, json);
+        return json;
     }
     private List<Resource> resourceList;
 }

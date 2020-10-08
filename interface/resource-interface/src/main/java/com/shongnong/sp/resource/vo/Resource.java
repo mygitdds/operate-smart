@@ -6,14 +6,19 @@ import lombok.Data;
 /***
  *
  */
-@DataObject
+@DataObject(generateConverter = true)
 @Data
-public class Resource extends OperationJson {
+public class Resource {
 
-    public  Resource(JsonObject jsonObject){
-        this.jsonObject = jsonObject;
+    public Resource(JsonObject obj){
+
+        ResourceConverter.fromJson(obj, this);
     }
-
+    public JsonObject toJson(){
+        JsonObject json = new JsonObject();
+        ResourceConverter.toJson(this, json);
+        return json;
+    }
     /**
      * 自增id
      */

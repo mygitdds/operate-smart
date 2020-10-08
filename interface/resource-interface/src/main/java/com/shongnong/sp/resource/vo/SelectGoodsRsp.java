@@ -6,10 +6,16 @@ import lombok.Data;
 
 import java.util.List;
 @Data
-@DataObject
-public class SelectGoodsRsp extends OperationJson {
-    public  SelectGoodsRsp(JsonObject jsonObject){
-        super.jsonObject = jsonObject;
+@DataObject(generateConverter = true)
+public class SelectGoodsRsp  {
+    public SelectGoodsRsp(JsonObject obj){
+
+        SelectGoodsRspConverter.fromJson(obj, this);
+    }
+    public JsonObject toJson(){
+        JsonObject json = new JsonObject();
+        SelectGoodsRspConverter.toJson(this, json);
+        return json;
     }
     private List<Goods> goodsList;
 }

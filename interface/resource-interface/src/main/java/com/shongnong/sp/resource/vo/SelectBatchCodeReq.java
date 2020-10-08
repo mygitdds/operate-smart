@@ -4,11 +4,17 @@ import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
 
-@DataObject
+@DataObject(generateConverter = true)
 @Data
-public class SelectBatchCodeReq extends OperationJson {
-    public  SelectBatchCodeReq(JsonObject jsonObject){
-        this.jsonObject = jsonObject;
+public class SelectBatchCodeReq  {
+    public SelectBatchCodeReq(JsonObject obj){
+
+        SelectBatchCodeReqConverter.fromJson(obj, this);
+    }
+    public JsonObject toJson(){
+        JsonObject json = new JsonObject();
+        SelectBatchCodeReqConverter.toJson(this, json);
+        return json;
     }
     private Long enterpriseId;
     private String resourceName;

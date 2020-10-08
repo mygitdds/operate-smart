@@ -5,10 +5,15 @@ import io.vertx.core.json.JsonObject;
 import lombok.Data;
 
 @Data
-@DataObject
-public class UpdateGoodsReq extends OperationJson {
-    public  UpdateGoodsReq(JsonObject jsonObject){
-        this.jsonObject = jsonObject;
+@DataObject(generateConverter = true)
+public class UpdateGoodsReq {
+    public UpdateGoodsReq(JsonObject obj){
+        UpdateGoodsReqConverter.fromJson(obj, this);
+    }
+    public JsonObject toJson(){
+        JsonObject json = new JsonObject();
+        UpdateGoodsReqConverter.toJson(this, json);
+        return json;
     }
     private String goodName;
     private Double goodPrice;

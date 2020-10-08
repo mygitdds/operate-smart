@@ -6,11 +6,17 @@ import lombok.Data;
 
 
 @Data
-@DataObject
-public class BatchCode extends OperationJson{
+@DataObject(generateConverter = true)
+public class BatchCode {
 
-    public  BatchCode(JsonObject jsonObject){
-        this.jsonObject = jsonObject;
+    public BatchCode(JsonObject obj){
+
+        BatchCodeConverter.fromJson(obj, this);
+    }
+    public JsonObject toJson(){
+        JsonObject json = new JsonObject();
+        BatchCodeConverter.toJson(this, json);
+        return json;
     }
 
     /**
