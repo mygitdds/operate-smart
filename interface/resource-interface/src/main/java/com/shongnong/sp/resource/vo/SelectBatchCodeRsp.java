@@ -8,6 +8,10 @@ import java.util.List;
 @Data
 @DataObject(generateConverter = true)
 public class SelectBatchCodeRsp {
+
+    public SelectBatchCodeRsp(){
+
+    }
     public SelectBatchCodeRsp(JsonObject obj){
 
         SelectBatchCodeRspConverter.fromJson(obj, this);

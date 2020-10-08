@@ -9,6 +9,11 @@ import java.util.List;
 @DataObject(generateConverter = true)
 @Data
 public class ResourceList {
+
+    public ResourceList(){
+
+    }
+
     public ResourceList(JsonObject obj){
 
         ResourceListConverter.fromJson(obj, this);

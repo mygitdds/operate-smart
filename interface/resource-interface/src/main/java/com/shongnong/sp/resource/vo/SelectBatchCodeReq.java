@@ -17,7 +17,7 @@ public class SelectBatchCodeReq  {
         return json;
     }
     private Long enterpriseId;
-    private String resourceName;
+    private String resourceId;
     private int page;
     private int rows;
 }

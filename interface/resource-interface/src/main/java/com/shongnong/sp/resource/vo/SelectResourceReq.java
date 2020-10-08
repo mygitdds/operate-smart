@@ -17,7 +17,7 @@ public class SelectResourceReq  {
     }
     private int page;
     private int rows;
-    private Long enterprise;
+    private Long enterpriseId;
     //可根据resourceName进行模糊搜索
     private String resourceName;
 

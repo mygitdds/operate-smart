@@ -16,7 +16,7 @@ public interface ResourceService {
     //生成主资源
     void createResource(CreateResourceReq resource, Handler<AsyncResult<Void>> resultHandler);
     //查询主资源
-    void selectResource(SelectBatchCodeReq selectResourceReq, Handler<AsyncResult<ResourceList>> resultHandler);
+    void selectResource(SelectResourceReq selectResourceReq, Handler<AsyncResult<ResourceList>> resultHandler);
     //生成批次
     void createBatchCode(BatchCode batch, Handler<AsyncResult<Void>> resultHandler);
     //查询批次

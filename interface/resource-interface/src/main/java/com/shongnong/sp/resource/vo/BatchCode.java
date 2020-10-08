@@ -9,6 +9,9 @@ import lombok.Data;
 @DataObject(generateConverter = true)
 public class BatchCode {
 
+    public BatchCode(){
+
+    }
     public BatchCode(JsonObject obj){
 
         BatchCodeConverter.fromJson(obj, this);
