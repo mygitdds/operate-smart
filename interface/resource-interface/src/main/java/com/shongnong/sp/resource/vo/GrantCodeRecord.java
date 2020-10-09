@@ -97,5 +97,5 @@ public class GrantCodeRecord {
      */
     private String cashprizePhone;
 
-    private String enterpriseId;
+    private Long enterpriseId;
 }

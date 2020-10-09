@@ -119,6 +119,17 @@ public class ResourceServiceImpl implements ResourceService {
                     JsonObject jsonObject = jsonObjects.get(0);
                     String resourceId =jsonObject.getString("id");
                     //获取拿到code的sql
+                    if(StringUtils.isNotEmpty(resourceId)){
+                        JsonArray getCodeParams = new JsonArray();
+                        String getCodeSql = resourceSqlBuild.getCode(Long.parseLong(resourceId),grantCodeRecord.getEnterpriseId(),getCodeParams);
+                        sqlService.selectList(getCodeParams,getCodeSql,"resource",codeResult->{
+                            //获取sql
+                            List<JsonObject> codeList = codeResult.result();
+                            if(!CollectionUtils.isEmpty(codeList)){
+                                //，然后，执行发放卷码流程
+                            }
+                        });
+                    }
 
                 }
 
