@@ -46,6 +46,7 @@ CREATE TABLE `t_smart_resource` (
 
 CREATE TABLE `t_smart_batch_code` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `request_id`  VARCHAR(40) NOT NULL DEFAULT '' COMMENT '链路id用于新增时候使用',
   `resource_id` BIGINT(20) NOT NULL DEFAULT '0' COMMENT '主资源id',
   `verify_type` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '核销类型 1 consumer,2 terminal',
   `claim_rules` VARCHAR(200) NOT NULL DEFAULT '' COMMENT '规则-采用json',

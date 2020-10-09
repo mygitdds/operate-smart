@@ -96,4 +96,6 @@ public class GrantCodeRecord {
      * 领取人手机号码
      */
     private String cashprizePhone;
+
+    private String enterpriseId;
 }

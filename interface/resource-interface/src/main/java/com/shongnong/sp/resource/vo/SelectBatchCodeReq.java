@@ -16,6 +16,7 @@ public class SelectBatchCodeReq  {
         SelectBatchCodeReqConverter.toJson(this, json);
         return json;
     }
+    private String requestId;
     private Long enterpriseId;
     private String resourceId;
     private int page;
