@@ -33,10 +33,9 @@ public class MainVerticle extends AbstractVerticle {
     });
     //构建数据源
     JSONArray jsonArray = ConsulConfig.getConsulConfig().getJsonObject().getJSONArray("sqlList");
-    SqlClient.getInstance().builderSqlClient(jsonArray,vertx);
     ServiceBinder binder = new ServiceBinder(vertx);
     // Create an instance of your service implementation
-    SqlService service = new SqlServiceImpl();
+    SqlService service = new SqlServiceImpl(vertx,jsonArray);
     //发布对外的接口
     // Register the handler
     MessageConsumer<JsonObject> consumer = binder

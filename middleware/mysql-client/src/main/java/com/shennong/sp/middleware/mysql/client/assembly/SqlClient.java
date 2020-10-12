@@ -11,15 +11,10 @@ import java.util.Map;
 public class SqlClient {
     private static SqlClient sqlClient = null;
     private  Map<String,SQLClient> sqlClientMap = new HashMap<>();
-    private SqlClient() {
+    public SqlClient(Vertx vertx, JSONArray dataSource) {
+        builderSqlClient(dataSource,vertx);
+    }
 
-    }
-    public static SqlClient getInstance() {
-        if (sqlClient == null) {
-            sqlClient = new SqlClient();
-        }
-        return sqlClient;
-    }
     //装client的map
     public void builderSqlClient(JSONArray dataSource,Vertx vertx){
         //拿到vert.x

@@ -1,9 +1,11 @@
 package com.shennong.sp.middleware.mysql.client.impl;
+import com.alibaba.fastjson.JSONArray;
 import com.shennong.sp.middleware.mysql.client.assembly.SqlClient;
 import com.shennong.sp.middleware.mysql.service.SqlService;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.sql.ResultSet;
@@ -13,9 +15,14 @@ import java.util.List;
 
 public class SqlServiceImpl implements SqlService {
 
+    private SqlClient client;
+
+    public SqlServiceImpl(Vertx vertx, JSONArray dataSource){
+        client = new SqlClient(vertx,dataSource);
+    }
     @Override
     public void selectList(JsonArray params, String sql, String database, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
-        SQLClient sqlClient =SqlClient.getInstance().getSqlClient(database);
+        SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             if (res.succeeded()) {
                 SQLConnection connection = res.result();
@@ -37,7 +44,7 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public void delete(JsonArray params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
-        SQLClient sqlClient =SqlClient.getInstance().getSqlClient(database);
+        SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             SQLConnection connection = res.result();
             if (res.succeeded()) {
@@ -57,7 +64,7 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public void update(JsonArray params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
-        SQLClient sqlClient =SqlClient.getInstance().getSqlClient(database);
+        SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             SQLConnection connection = res.result();
             if (res.succeeded()) {
@@ -77,7 +84,7 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public void insert(JsonArray params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
-        SQLClient sqlClient =SqlClient.getInstance().getSqlClient(database);
+        SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             SQLConnection connection = res.result();
             if (res.succeeded()) {
@@ -97,7 +104,7 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public void batchOperation(List<JsonArray> params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
-        SQLClient sqlClient =SqlClient.getInstance().getSqlClient(database);
+        SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             SQLConnection connection = res.result();
             if (res.succeeded()) {

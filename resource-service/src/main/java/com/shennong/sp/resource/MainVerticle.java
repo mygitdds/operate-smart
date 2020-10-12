@@ -9,7 +9,9 @@ public class MainVerticle extends AbstractVerticle {
     //获取配置中心的配置
 
     //构建组件mapper，分布式组件构建
+
     //发布服务
+
     //引入组件-比如mq,redis等中间件。
     //
   }

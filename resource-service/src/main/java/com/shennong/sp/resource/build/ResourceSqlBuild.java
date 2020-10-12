@@ -86,7 +86,7 @@ public class ResourceSqlBuild {
     //根据主资源id获取卷码
     public String getCode(Long id,Long enterpriseId,JsonArray params){
         StringBuilder sql = new StringBuilder();
-        sql.append("select code from t_smart_code where enterprise_id =? and resource_id = ? order by insert_time limit 0,100");
+        sql.append("select code,batch_code_id from t_smart_code where enterprise_id =? and resource_id = ? order by insert_time limit 0,100");
         return sql.toString();
     }
 
@@ -148,6 +148,13 @@ public class ResourceSqlBuild {
         }
        return  sql.toString();
     }
-    //
+    //修改卷码状态
+    public String updateCodeStatus(String code,JsonArray params){
+        JsonArray paramsList = params;
+        StringBuilder sql = new StringBuilder();
+        sql.append("update t_smart_code set code_status = 1 where code = ?");
+        params.add(code);
+        return sql.toString();
+    }
 
 }

@@ -1,17 +1,32 @@
 package com.shennong.sp.middleware.redis.client.assembly;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.vertx.core.Vertx;
-import io.vertx.redis.client.RedisOptions;
+import io.vertx.redis.client.*;
+
+import java.util.List;
 
 public class RedisClient {
-    public void builderRedisClient(JSONArray dataSource, Vertx vertx){
-        for(int i=0;i<dataSource.size();i++){
+    private RedisAPI redisApi;
+    public void builderRedisClient(JSONObject dataSource, Vertx vertx){
+        RedisOptions redisOptions = new RedisOptions();
+        String redisList =dataSource.getString("redis");
+        List<String> redis = JSON.parseArray(redisList,String.class);
+        redisOptions.setEndpoints(redis);
+        redisOptions.setType(RedisClientType.STANDALONE);
+        Redis.createClient(
+                vertx,
+                redisOptions)
+                .connect(onConnect -> {
+                    if (onConnect.succeeded()) {
+                        RedisConnection client = onConnect.result();
+                        redisApi = RedisAPI.api(client);
+                    }
+                });
+    }
 
-            JSONObject jsonObject =dataSource.getJSONObject(i);
-            RedisOptions redisOptions = new RedisOptions();
-        }
-
+    public RedisAPI getRedisAPI(){
+        return redisApi;
     }
 }

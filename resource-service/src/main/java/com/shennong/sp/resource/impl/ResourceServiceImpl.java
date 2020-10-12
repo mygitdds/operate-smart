@@ -15,7 +15,9 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.shareddata.Lock;
 import io.vertx.serviceproxy.ServiceException;
+import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import sun.security.provider.certpath.Vertex;
@@ -23,14 +25,17 @@ import sun.security.provider.certpath.Vertex;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class ResourceServiceImpl implements ResourceService {
     private Vertx vertx;
     private SqlService sqlService;
     private ResourceSqlBuild resourceSqlBuild;
+    private HazelcastClusterManager hazelcastClusterManager;
 
-    public ResourceServiceImpl(Vertx vertx) {
+    public ResourceServiceImpl(Vertx vertx,HazelcastClusterManager hazelcastClusterManager) {
         this.vertx = vertx;
+        this.hazelcastClusterManager = hazelcastClusterManager;
         this.sqlService = SqlService.createProxy(this.vertx, "database-service-address");
         resourceSqlBuild = new ResourceSqlBuild();
     }
@@ -117,36 +122,69 @@ public class ResourceServiceImpl implements ResourceService {
                 List<JsonObject> jsonObjects = result.result();
                 if(!CollectionUtils.isEmpty(jsonObjects)){
                     JsonObject jsonObject = jsonObjects.get(0);
-                    String resourceId =jsonObject.getString("id");
-                    //获取拿到code的sql
-                    if(StringUtils.isNotEmpty(resourceId)){
+                    Long resourceId =jsonObject.getLong("id");
+                    //获取sql
+                    if(resourceId !=null){
                         JsonArray getCodeParams = new JsonArray();
-                        String getCodeSql = resourceSqlBuild.getCode(Long.parseLong(resourceId),grantCodeRecord.getEnterpriseId(),getCodeParams);
+                        String getCodeSql = resourceSqlBuild.getCode(resourceId,grantCodeRecord.getEnterpriseId(),getCodeParams);
                         sqlService.selectList(getCodeParams,getCodeSql,"resource",codeResult->{
                             //获取sql
-                            List<JsonObject> codeList = codeResult.result();
-                            if(!CollectionUtils.isEmpty(codeList)){
-                                //，然后，执行发放卷码流程
+                            if(codeResult.succeeded()){
+                                List<JsonObject> codeList = codeResult.result();
+                                if(!CollectionUtils.isEmpty(codeList)){
+                                    //，然后，执行发放卷码流程
+                                    Random random =new Random();
+                                    int num = random.nextInt(codeList.size());
+                                    JsonObject codeJson = codeList.get(num);
+                                    String code = codeJson.getString("code");
+                                    long batchCodeId = codeJson.getLong("batch_code_id");
+                                    hazelcastClusterManager.getLockWithTimeout(code,2000L,lock ->{
+                                        if(lock.succeeded()){
+                                            //获取到锁
+                                            Lock lock1 = lock.result();
+                                            //修改该卷码的状态
+                                            JsonArray updateCodePara = new JsonArray();
+                                            String updateCodeStatusSql = resourceSqlBuild.updateCodeStatus(code,updateCodePara);
+                                            sqlService.update(updateCodePara,updateCodeStatusSql,"resource",updateCodeResult->{
+                                                if(updateCodeResult.succeeded()){
+                                                    resultHandler.handle(Future.succeededFuture(code));
+                                                    //修改住资源
+                                                    JsonArray updateResourcePara = new JsonArray();
+                                                    String updateResourceSql = resourceSqlBuild.resourceCount(resourceId,1,"grantNum",updateResourcePara);
+                                                    sqlService.update(updateResourcePara,updateResourceSql,"resource",updateResourceNumResult->{
+                                                        if (updateResourceNumResult.succeeded()){
+                                                            //修改批次
+                                                            JsonArray updateBatchCodePara = new JsonArray();
+                                                            String updateBatchCodeSql = resourceSqlBuild.batchCodeCount(batchCodeId,1,"grantNum",updateBatchCodePara);
+                                                            sqlService.update(updateBatchCodePara,updateBatchCodeSql,"resource",updateBatchCodeNumResult->{
+                                                                if(updateBatchCodeNumResult.succeeded()){
+                                                                    Future.succeededFuture();
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }else {
+                                            resultHandler.handle(ServiceException.fail(1002, "请重试"));
+                                        }
+                                    });
+                                }else {
+                                    resultHandler.handle(ServiceException.fail(1002, "没有可使用的卷码"));
+                                }
                             }
                         });
+                    }else {
+                        resultHandler.handle(ServiceException.fail(1002, "没有可使用的卷码"));
                     }
 
                 }
-
-
             }
-        });
-
-        //根据批次id拿到code
-        //然后使用乐观锁
-        //构建sql 发放卷码
-        StringBuilder sql = new StringBuilder();
-        //拿出来10个
-        sql.append("select  ");
+        });;
     }
-
     @Override
     public void verifyCode(String code, Handler<AsyncResult<Boolean>> resultHandler) {
+        //核销卷码
 
     }
 }

@@ -23,6 +23,8 @@ public interface RedisService {
     void batchInsert(JsonObject keyValue, Handler<AsyncResult<Void>> resultHandler);
     //批量删除
     void batchDelete(JsonObject keyValue, Handler<AsyncResult<Void>> resultHandler);
-    //批量获取key
-    void batchSelect(JsonObject keyValue, Handler<AsyncResult<Void>> resultHandler);
+    //批量获取
+    void batchSelect(JsonObject keyValue, Handler<AsyncResult<JsonObject>> resultHandler);
+    //利用redis获取分布式锁
+    void getLock();
 }
