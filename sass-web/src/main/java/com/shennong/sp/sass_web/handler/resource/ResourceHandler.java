@@ -1,19 +1,41 @@
 package com.shennong.sp.sass_web.handler.resource;
 
+import com.alibaba.fastjson.JSON;
+import com.shennong.sp.commom.http.HttpResponseEntity;
+import com.shongnong.sp.resource.service.ResourceService;
+import com.shongnong.sp.resource.vo.CreateResourceReq;
+import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
-import io.vertx.ext.web.Session;
 
-public class ResourceHandler  {
+
+public class ResourceHandler {
     private Router router;
-    public void init(Router router){
+    private Vertx vertx;
+    private ResourceService resourceService;
+    //获取一个代理
+    public void init(Router router,Vertx vertx){
         this.router = router;
+        this.vertx = vertx;
+        this.resourceService = ResourceService.createProxy(vertx,"operate-smart-resource");
         createResource();
     }
     public void createResource(){
-        router.route("/somepath/blah/").handler(routingContext -> {
-            Session session = routingContext.session();
-
+        router.route("/resource/createResource").handler(routingContext -> {
+            //拿到rsp
+            HttpServerResponse response = routingContext.response();
+           //获取到参数，转成
+           JsonObject jsonObject = routingContext.getBodyAsJson();
+            CreateResourceReq resource =JSON.parseObject(jsonObject.toString(),CreateResourceReq.class);
+            resourceService.createResource(resource,result->{
+                if(result.succeeded()){
+                   // response.write()
+                    response.write(HttpResponseEntity.suss());
+                }else {
+                    response.write(HttpResponseEntity.fail(result.cause().getLocalizedMessage()));
+                }
+            });
         });
-
     }
 }

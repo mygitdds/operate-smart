@@ -16,6 +16,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.shareddata.Lock;
+import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.serviceproxy.ServiceException;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.apache.commons.collections4.CollectionUtils;
@@ -31,11 +32,11 @@ public class ResourceServiceImpl implements ResourceService {
     private Vertx vertx;
     private SqlService sqlService;
     private ResourceSqlBuild resourceSqlBuild;
-    private HazelcastClusterManager hazelcastClusterManager;
+    private ClusterManager mgr;
 
-    public ResourceServiceImpl(Vertx vertx,HazelcastClusterManager hazelcastClusterManager) {
+    public ResourceServiceImpl(Vertx vertx, ClusterManager mgr) {
         this.vertx = vertx;
-        this.hazelcastClusterManager = hazelcastClusterManager;
+        this.mgr = mgr;
         this.sqlService = SqlService.createProxy(this.vertx, "database-service-address");
         resourceSqlBuild = new ResourceSqlBuild();
     }
@@ -138,7 +139,7 @@ public class ResourceServiceImpl implements ResourceService {
                                     JsonObject codeJson = codeList.get(num);
                                     String code = codeJson.getString("code");
                                     long batchCodeId = codeJson.getLong("batch_code_id");
-                                    hazelcastClusterManager.getLockWithTimeout(code,2000L,lock ->{
+                                    mgr.getLockWithTimeout(code,2000L,lock ->{
                                         if(lock.succeeded()){
                                             //获取到锁
                                             Lock lock1 = lock.result();

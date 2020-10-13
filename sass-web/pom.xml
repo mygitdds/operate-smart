@@ -41,6 +41,40 @@
     </dependency>
 
     <dependency>
+      <groupId>com.shongnong.sp</groupId>
+      <artifactId>resource-interface</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-hazelcast</artifactId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.13.3</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.10</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.shennong.sp</groupId>
+      <artifactId>common</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-junit5</artifactId>
       <scope>test</scope>
