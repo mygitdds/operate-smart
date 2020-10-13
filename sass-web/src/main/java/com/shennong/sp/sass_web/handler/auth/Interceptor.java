@@ -1,5 +1,4 @@
 package com.shennong.sp.sass_web.handler.auth;
-
 import io.vertx.core.Handler;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.spi.cluster.ClusterManager;
@@ -23,7 +22,6 @@ public class Interceptor implements Handler<RoutingContext> {
         Map<String, Cookie> cookie = context.cookieMap();
         Cookie cookie1 = cookie.get("www.shennonggouwu.com");
         String sessionKey = cookie1.getValue();
-
         //在Hazelcast中去寻找相应的值
         mgr.getAsyncMap("session",map->{
             if(map.succeeded()){
