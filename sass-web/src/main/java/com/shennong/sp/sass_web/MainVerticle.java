@@ -21,19 +21,16 @@ public class MainVerticle extends AbstractVerticle {
   public void start(Promise<Void> startPromise) throws Exception {
     //获取一个集群实例
     Config hazelcastConfig = ConfigUtil.loadConfig();
-
     hazelcastConfig.getGroupConfig()
             .setName("dev")
             .setPassword("dev-pass");
     ClusterManager mgr = new HazelcastClusterManager(hazelcastConfig);
     mgr.setVertx(vertx);
-
     ResourceHandler resourceHandler = new ResourceHandler();
     HttpServer server = vertx.createHttpServer();
     Router router = Router.router(vertx);
     router.route().handler(new Interceptor(mgr));
     resourceHandler.init(router,vertx);
-
     server.requestHandler(router).listen(8080);
   }
 }
