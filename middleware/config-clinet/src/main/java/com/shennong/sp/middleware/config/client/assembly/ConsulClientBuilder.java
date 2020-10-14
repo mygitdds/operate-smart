@@ -14,7 +14,7 @@ public class ConsulClientBuilder {
     }
     public void createConsulClient(Vertx vertx){
         ConsulClientOptions options = new ConsulClientOptions()
-                .setHost("consul.example.com")
+                .setHost("139.129.116.204")
                 .setPort(8500)
                 .setTimeout(5000)
                 .setDc("dc1");
