@@ -24,24 +24,28 @@ public class MainVerticle extends AbstractVerticle {
     //缓存vertx便于其他地方使用
     VertxCache.getInstance().setVertx(vertx);
     //获取配置
-    ConsulConfigClient consulConfigClient = ConsulConfigClient.createProxy(vertx,"consul-config-service-address");
-    consulConfigClient.get("sql", res2 -> {
+    ConsulConfigClient consulConfigClient = ConsulConfigClient.createProxy(vertx,"config-service-address");
+    consulConfigClient.get("sqlList", res2 -> {
       if (res2.succeeded()) {
         //缓存配置
         ConsulConfig.getConsulConfig().setJsonObject(JSON.parseObject(res2.result()));
+        System.out.println("拿到的数据是="+JSON.parseObject(res2.result()).toString());
+        //构建数据源
+        JSONArray jsonArray = ConsulConfig.getConsulConfig().getJsonObject().getJSONArray("sqlList");
+        ServiceBinder binder = new ServiceBinder(vertx);
+        // Create an instance of your service implementation
+        SqlService service = new SqlServiceImpl(vertx,jsonArray);
+        //发布对外的接口
+        // Register the handler
+        MessageConsumer<JsonObject> consumer = binder
+                .setAddress("database-service-address")
+                .register(SqlService.class, service);
+        System.out.println("suss-start");
+        startPromise.complete();
+      }else {
+        startPromise.fail(res2.cause());
       }
     });
-    //构建数据源
-    JSONArray jsonArray = ConsulConfig.getConsulConfig().getJsonObject().getJSONArray("sqlList");
-    ServiceBinder binder = new ServiceBinder(vertx);
-    // Create an instance of your service implementation
-    SqlService service = new SqlServiceImpl(vertx,jsonArray);
-    //发布对外的接口
-    // Register the handler
-    MessageConsumer<JsonObject> consumer = binder
-            .setAddress("database-service-address")
-            .register(SqlService.class, service);
-    binder.unregister(consumer);
-    startPromise.complete();
+
   }
 }

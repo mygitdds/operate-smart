@@ -15,11 +15,12 @@ public class MainVerticle extends AbstractVerticle {
   public void start(Promise<Void> startPromise) throws Exception {
     VertxCache.getInstance().setVertx(vertx);
     ServiceBinder binder = new ServiceBinder(vertx);
-    ConsulConfigClient consulConfigClient = new ConsulConfigImpl();
+    ConsulConfigClient consulConfigClient = new ConsulConfigImpl(vertx);
     MessageConsumer<JsonObject> consumer = binder
-            .setAddress("consul-config-service-address")
+            .setAddress("config-service-address")
             .register(ConsulConfigClient.class, consulConfigClient);
-    binder.unregister(consumer);
+    System.out.println("发布的信息="+consumer.isRegistered());
+    //查询是否发布成功
     startPromise.complete();
   }
 }

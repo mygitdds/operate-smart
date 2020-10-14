@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SqlClient {
-    private static SqlClient sqlClient = null;
     private  Map<String,SQLClient> sqlClientMap = new HashMap<>();
     public SqlClient(Vertx vertx, JSONArray dataSource) {
         builderSqlClient(dataSource,vertx);

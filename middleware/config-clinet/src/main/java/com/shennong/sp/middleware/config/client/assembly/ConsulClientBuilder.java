@@ -1,5 +1,4 @@
 package com.shennong.sp.middleware.config.client.assembly;
-import com.shennong.sp.commom.cache.VertxCache;
 import io.vertx.core.Vertx;
 import io.vertx.ext.consul.ConsulClient;
 import io.vertx.ext.consul.ConsulClientOptions;
@@ -19,7 +18,8 @@ public class ConsulClientBuilder {
                 .setTimeout(5000)
                 .setDc("dc1");
         //获取到vert.x-基于不是vert.x的组件，拿到他。
-
         consulClient = ConsulClient.create(vertx, options);
+        System.out.println("获取到consulClient了");
+
     }
 }
