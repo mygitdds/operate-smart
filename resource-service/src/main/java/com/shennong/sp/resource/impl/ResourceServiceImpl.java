@@ -183,6 +183,8 @@ public class ResourceServiceImpl implements ResourceService {
             }
         });;
     }
+
+
     @Override
     public void verifyCode(String code, Handler<AsyncResult<Boolean>> resultHandler) {
         //核销卷码
