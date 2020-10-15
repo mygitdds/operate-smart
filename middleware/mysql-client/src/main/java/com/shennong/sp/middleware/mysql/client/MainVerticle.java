@@ -20,7 +20,6 @@ public class MainVerticle extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
-
     //缓存vertx便于其他地方使用
     VertxCache.getInstance().setVertx(vertx);
     //获取配置
@@ -28,10 +27,10 @@ public class MainVerticle extends AbstractVerticle {
     consulConfigClient.get("sqlList", res2 -> {
       if (res2.succeeded()) {
         //缓存配置
-        ConsulConfig.getConsulConfig().setJsonObject(JSON.parseObject(res2.result()));
-        System.out.println("拿到的数据是="+JSON.parseObject(res2.result()).toString());
+        String config = res2.result();
+        System.out.println("拿到的数据是="+config);
         //构建数据源
-        JSONArray jsonArray = ConsulConfig.getConsulConfig().getJsonObject().getJSONArray("sqlList");
+        JSONArray jsonArray = JSON.parseArray(config);
         ServiceBinder binder = new ServiceBinder(vertx);
         // Create an instance of your service implementation
         SqlService service = new SqlServiceImpl(vertx,jsonArray);
@@ -46,6 +45,5 @@ public class MainVerticle extends AbstractVerticle {
         startPromise.fail(res2.cause());
       }
     });
-
   }
 }

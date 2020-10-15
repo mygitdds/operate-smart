@@ -22,6 +22,7 @@ public class SqlClient {
             JSONObject jsonObject =dataSource.getJSONObject(i);
             JsonObject mySQLClientConfig = new JsonObject().put("host", jsonObject.get("host"))
                     .put("port",jsonObject.get("port"))
+                    .put("host",jsonObject.get("host"))
                     .put("username",jsonObject.get("username"))
                     .put("password",jsonObject.get("password"))
                     .put("database",jsonObject.get("database"))
