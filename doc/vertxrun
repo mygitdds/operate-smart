@@ -1,0 +1,13 @@
+java -jar  middleware-mysql-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-db –worker -cluster
+
+java -jar middleware-config-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-config –worker -cluster
+
+tar -xzvf vert.x-3.9.3-full.tar.gz
+
+java -jar middleware-config-client-1.0.0-SNAPSHOT-fat.jar list
+
+
+export VERTX_HOME=/usr/local/vertx/vertx
+export PATH=$VERTX_HOME/bin:$PATH
+
+nohup java -jar xxx.jar &
