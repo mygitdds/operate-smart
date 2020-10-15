@@ -1,11 +1,8 @@
 package com.shongnong.sp.resource.vo;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
-import lombok.Data;
-import lombok.ToString;
 
 
-@Data
 @DataObject(generateConverter = true)
 public class GrantCodeRecord {
     public GrantCodeRecord(JsonObject obj){
@@ -98,4 +95,140 @@ public class GrantCodeRecord {
     private String cashprizePhone;
 
     private Long enterpriseId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getCodeId() {
+        return codeId;
+    }
+
+    public void setCodeId(Long codeId) {
+        this.codeId = codeId;
+    }
+
+    public String getWinningNumber() {
+        return winningNumber;
+    }
+
+    public void setWinningNumber(String winningNumber) {
+        this.winningNumber = winningNumber;
+    }
+
+    public String getPrizeId() {
+        return prizeId;
+    }
+
+    public void setPrizeId(String prizeId) {
+        this.prizeId = prizeId;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public String getPrizeType() {
+        return prizeType;
+    }
+
+    public void setPrizeType(String prizeType) {
+        this.prizeType = prizeType;
+    }
+
+    public String getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
+
+    public String getBusinessParty() {
+        return businessParty;
+    }
+
+    public void setBusinessParty(String businessParty) {
+        this.businessParty = businessParty;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getVerifyTime() {
+        return verifyTime;
+    }
+
+    public void setVerifyTime(String verifyTime) {
+        this.verifyTime = verifyTime;
+    }
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getExamineName() {
+        return examineName;
+    }
+
+    public void setExamineName(String examineName) {
+        this.examineName = examineName;
+    }
+
+    public String getExaminePhone() {
+        return examinePhone;
+    }
+
+    public void setExaminePhone(String examinePhone) {
+        this.examinePhone = examinePhone;
+    }
+
+    public String getCashprizePhone() {
+        return cashprizePhone;
+    }
+
+    public void setCashprizePhone(String cashprizePhone) {
+        this.cashprizePhone = cashprizePhone;
+    }
+
+    public Long getEnterpriseId() {
+        return enterpriseId;
+    }
+
+    public void setEnterpriseId(Long enterpriseId) {
+        this.enterpriseId = enterpriseId;
+    }
 }

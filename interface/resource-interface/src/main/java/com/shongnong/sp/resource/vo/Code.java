@@ -1,10 +1,9 @@
 package com.shongnong.sp.resource.vo;
-import lombok.Data;
+
 import lombok.ToString;
 
 import java.util.Date;
 
-@Data
 @ToString
 public class Code {
 
@@ -55,4 +54,83 @@ public class Code {
     //操作者
     private String executor;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getBatchCodeId() {
+        return batchCodeId;
+    }
+
+    public void setBatchCodeId(Long batchCodeId) {
+        this.batchCodeId = batchCodeId;
+    }
+
+    public Long getEnterpriseId() {
+        return enterpriseId;
+    }
+
+    public void setEnterpriseId(Long enterpriseId) {
+        this.enterpriseId = enterpriseId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getCodeStatus() {
+        return codeStatus;
+    }
+
+    public void setCodeStatus(String codeStatus) {
+        this.codeStatus = codeStatus;
+    }
+
+    public String getVerifyTime() {
+        return verifyTime;
+    }
+
+    public void setVerifyTime(String verifyTime) {
+        this.verifyTime = verifyTime;
+    }
+
+    public Date getInsertTime() {
+        return insertTime;
+    }
+
+    public void setInsertTime(Date insertTime) {
+        this.insertTime = insertTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public int getEdition() {
+        return edition;
+    }
+
+    public void setEdition(int edition) {
+        this.edition = edition;
+    }
+
+    public String getExecutor() {
+        return executor;
+    }
+
+    public void setExecutor(String executor) {
+        this.executor = executor;
+    }
 }

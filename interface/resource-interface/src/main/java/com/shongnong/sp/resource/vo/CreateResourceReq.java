@@ -2,11 +2,10 @@ package com.shongnong.sp.resource.vo;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
-import lombok.Data;
+
 
 
 @DataObject(generateConverter = true)
-@Data
 public class CreateResourceReq {
     public CreateResourceReq(JsonObject obj){
         CreateResourceReqConverter.fromJson(obj, this);
@@ -50,4 +49,60 @@ public class CreateResourceReq {
      * 操作者
      */
     private String operator;
+
+    public Long getEnterpriseId() {
+        return enterpriseId;
+    }
+
+    public void setEnterpriseId(Long enterpriseId) {
+        this.enterpriseId = enterpriseId;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getStockManager() {
+        return stockManager;
+    }
+
+    public void setStockManager(String stockManager) {
+        this.stockManager = stockManager;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
 }

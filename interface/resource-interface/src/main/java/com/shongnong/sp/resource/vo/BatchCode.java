@@ -2,10 +2,8 @@ package com.shongnong.sp.resource.vo;
 import com.alibaba.fastjson.JSONObject;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
-import lombok.Data;
 
 
-@Data
 @DataObject(generateConverter = true)
 public class BatchCode {
 
@@ -69,4 +67,107 @@ public class BatchCode {
 
     private String claimRulesString;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(Long resourceId) {
+        this.resourceId = resourceId;
+    }
+
+    public String getVerifyType() {
+        return verifyType;
+    }
+
+    public void setVerifyType(String verifyType) {
+        this.verifyType = verifyType;
+    }
+
+    public JSONObject getClaimRules() {
+        return claimRules;
+    }
+
+    public void setClaimRules(JSONObject claimRules) {
+        this.claimRules = claimRules;
+    }
+
+    public Integer getCodeNumber() {
+        return codeNumber;
+    }
+
+    public void setCodeNumber(Integer codeNumber) {
+        this.codeNumber = codeNumber;
+    }
+
+    public String getGrantType() {
+        return grantType;
+    }
+
+    public void setGrantType(String grantType) {
+        this.grantType = grantType;
+    }
+
+    public Integer getBrushCount() {
+        return brushCount;
+    }
+
+    public void setBrushCount(Integer brushCount) {
+        this.brushCount = brushCount;
+    }
+
+    public Integer getLockTime() {
+        return lockTime;
+    }
+
+    public void setLockTime(Integer lockTime) {
+        this.lockTime = lockTime;
+    }
+
+    public Integer getGrantNum() {
+        return grantNum;
+    }
+
+    public void setGrantNum(Integer grantNum) {
+        this.grantNum = grantNum;
+    }
+
+    public Integer getInvalidNum() {
+        return invalidNum;
+    }
+
+    public void setInvalidNum(Integer invalidNum) {
+        this.invalidNum = invalidNum;
+    }
+
+    public Integer getVerifyNum() {
+        return verifyNum;
+    }
+
+    public void setVerifyNum(Integer verifyNum) {
+        this.verifyNum = verifyNum;
+    }
+
+    public Long getEnterpriseId() {
+        return enterpriseId;
+    }
+
+    public void setEnterpriseId(Long enterpriseId) {
+        this.enterpriseId = enterpriseId;
+    }
+
+    public String getClaimRulesString() {
+        return claimRulesString;
+    }
+
+    public void setClaimRulesString(String claimRulesString) {
+        this.claimRulesString = claimRulesString;
+    }
 }

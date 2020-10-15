@@ -1,6 +1,9 @@
-java -jar  middleware-mysql-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-db –worker -cluster
+nohup java -jar  middleware-mysql-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-db –worker -cluster > dblog.file  2>&1 &
 
-java -jar middleware-config-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-config –worker -cluster
+nohup java -jar middleware-config-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-config –worker -cluster  > configlog.file  2>&1 &
+
+
+nohup java -jar zpw-2.2.5.RELEASE.jar  > log.file  2>&1 &
 
 tar -xzvf vert.x-3.9.3-full.tar.gz
 

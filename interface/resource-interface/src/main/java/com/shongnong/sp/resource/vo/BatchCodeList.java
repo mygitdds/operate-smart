@@ -2,11 +2,10 @@ package com.shongnong.sp.resource.vo;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
-import lombok.Data;
+
 
 import java.util.List;
 @DataObject(generateConverter = true)
-@Data
 public class BatchCodeList {
     public BatchCodeList(JsonObject obj){
 
@@ -18,4 +17,12 @@ public class BatchCodeList {
         return json;
     }
     private List<BatchCode> batchCodeList;
+
+    public List<BatchCode> getBatchCodeList() {
+        return batchCodeList;
+    }
+
+    public void setBatchCodeList(List<BatchCode> batchCodeList) {
+        this.batchCodeList = batchCodeList;
+    }
 }
