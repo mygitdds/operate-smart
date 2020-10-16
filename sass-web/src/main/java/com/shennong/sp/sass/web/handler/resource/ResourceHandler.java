@@ -8,12 +8,15 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 
 public class ResourceHandler {
     private Router router;
     private Vertx vertx;
     private ResourceService resourceService;
+    private Logger logger = LoggerFactory.getLogger(ResourceHandler.class);
     //获取一个代理
     public void init(Router router,Vertx vertx){
         this.router = router;
@@ -22,6 +25,7 @@ public class ResourceHandler {
         createResource();
     }
     public void createResource(){
+        logger.info("启动执行了create");
         router.route(HttpMethod.POST,"/resource/createResource").handler(routingContext -> {
             //拿到rsp
             HttpServerResponse response = routingContext.response();
