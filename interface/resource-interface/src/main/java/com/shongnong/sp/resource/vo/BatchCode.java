@@ -19,6 +19,10 @@ public class BatchCode {
         BatchCodeConverter.toJson(this, json);
         return json;
     }
+    /**
+     *
+     */
+    private String requestId;
 
     /**
      * 自增id
@@ -169,5 +173,13 @@ public class BatchCode {
 
     public void setClaimRulesString(String claimRulesString) {
         this.claimRulesString = claimRulesString;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 }

@@ -1,31 +1,26 @@
 package com.shennong.sp.resource.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.shennong.sp.commom.cache.VertxCache;
-import com.shennong.sp.commom.util.SqlUtil;
 import com.shennong.sp.middleware.mysql.service.SqlService;
 import com.shennong.sp.resource.build.ResourceSqlBuild;
+import com.shennong.sp.resource.common.Constant;
 import com.shongnong.sp.resource.service.ResourceService;
 import com.shongnong.sp.resource.vo.*;
-import io.netty.util.internal.StringUtil;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.core.shareddata.Lock;
 import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.serviceproxy.ServiceException;
-import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import sun.security.provider.certpath.Vertex;
 
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class ResourceServiceImpl implements ResourceService {
@@ -33,11 +28,12 @@ public class ResourceServiceImpl implements ResourceService {
     private SqlService sqlService;
     private ResourceSqlBuild resourceSqlBuild;
     private ClusterManager mgr;
+    private Logger logger = LoggerFactory.getLogger(ResourceServiceImpl.class);
 
     public ResourceServiceImpl(Vertx vertx, ClusterManager mgr) {
         this.vertx = vertx;
         this.mgr = mgr;
-        this.sqlService = SqlService.createProxy(this.vertx, "database-service-address");
+        this.sqlService = SqlService.createProxy(this.vertx, Constant.ADDRESS_DB);
         resourceSqlBuild = new ResourceSqlBuild();
     }
 
@@ -45,9 +41,10 @@ public class ResourceServiceImpl implements ResourceService {
     public void createResource(CreateResourceReq resource, Handler<AsyncResult<Void>> resultHandler) {
         //主资源，不需要做幂等性判断
         //构建sql与参数通过ResourceSqlBuild
+        logger.info("{} [createResource] recv reqId:{} req:{}",resource.getRequestId(), JSON.toJSONString(resource));
         JsonArray params = new JsonArray();
         String sql = resourceSqlBuild.createResourceSql(resource, params);
-        sqlService.insert(params, sql, "resource", result -> {
+        sqlService.insert(params, sql, Constant.RESOURCE_DB, result -> {
             if (result.succeeded()) {
                 resultHandler.handle(Future.succeededFuture());
             } else {
@@ -59,9 +56,10 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void selectResource(SelectResourceReq selectResourceReq, Handler<AsyncResult<ResourceList>> resultHandler) {
         //构造查询sql
+        logger.info("{} [selectResource] recv reqId:{} req:{}", selectResourceReq.getRequestId(),JSON.toJSONString(selectResourceReq));
         JsonArray params = new JsonArray();
         String sql = resourceSqlBuild.selectResourceSql(selectResourceReq, params);
-        sqlService.selectList(params, sql.toString(), "resource", result -> {
+        sqlService.selectList(params, sql.toString(), Constant.RESOURCE_DB, result -> {
             if (result.succeeded()) {
                 List<JsonObject> list = result.result();
                 ResourceList resourceList = new ResourceList();
@@ -77,10 +75,11 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public void createBatchCode(BatchCode batch, Handler<AsyncResult<Void>> resultHandler) {
+        logger.info("{} [createBatchCode] recv  reqId:{} req:{}",batch.getRequestId(), JSON.toJSONString(batch));
         //构造sql-不需要幂等性判断
         JsonArray params = new JsonArray();
         String sql = resourceSqlBuild.createBatchCodeSql(batch,params);
-        sqlService.insert(params, sql, "resource", result -> {
+        sqlService.insert(params, sql, Constant.RESOURCE_DB, result -> {
             if (result.succeeded()) {
                 resultHandler.handle(Future.succeededFuture());
                 //批量新增code
@@ -92,10 +91,12 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public void selectBatchCode(SelectBatchCodeReq selectBatchCodeReq, Handler<AsyncResult<SelectBatchCodeRsp>> resultHandler) {
+        logger.info("{} [selectBatchCode] recv reqId:{} req:{}",selectBatchCodeReq.getRequestId(), JSON.toJSONString(selectBatchCodeReq));
+
         //构建sql
         JsonArray params = new JsonArray();
         String sql = resourceSqlBuild.selectBatchCode(selectBatchCodeReq,params);
-        sqlService.selectList(params, sql, "resource", result -> {
+        sqlService.selectList(params, sql, Constant.RESOURCE_DB, result -> {
             if (result.succeeded()) {
                 SelectBatchCodeRsp selectBatchCodeRsp = new SelectBatchCodeRsp();
                 List<JsonObject> list = result.result();
@@ -115,10 +116,11 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public void grantCode(GrantCodeRecord grantCodeRecord, Handler<AsyncResult<String>> resultHandler) {
+        logger.info("{} [grantCode] recv req:{}",grantCodeRecord.getRequestId(), JSON.toJSONString(grantCodeRecord));
         //构建外部资源id去拿到对应的批次id
         JsonArray params = new JsonArray();
         String getResourceSql = resourceSqlBuild.getResourceId(grantCodeRecord,params);
-        sqlService.selectList(params,getResourceSql,"resource", result ->{
+        sqlService.selectList(params,getResourceSql,Constant.RESOURCE_DB, result ->{
             if (result.succeeded()) {
                 List<JsonObject> jsonObjects = result.result();
                 if(!CollectionUtils.isEmpty(jsonObjects)){
@@ -178,12 +180,10 @@ public class ResourceServiceImpl implements ResourceService {
                     }else {
                         resultHandler.handle(ServiceException.fail(1002, "没有可使用的卷码"));
                     }
-
                 }
             }
-        });;
+        });
     }
-
 
     @Override
     public void verifyCode(String code, Handler<AsyncResult<Boolean>> resultHandler) {

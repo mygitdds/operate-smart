@@ -1,7 +1,7 @@
-package com.shennong.sp.sass_web;
+package com.shennong.sp.sass.web;
 import com.hazelcast.config.Config;
-import com.shennong.sp.sass_web.handler.auth.Interceptor;
-import com.shennong.sp.sass_web.handler.resource.ResourceHandler;
+import com.shennong.sp.sass.web.handler.auth.Interceptor;
+import com.shennong.sp.sass.web.handler.resource.ResourceHandler;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServer;

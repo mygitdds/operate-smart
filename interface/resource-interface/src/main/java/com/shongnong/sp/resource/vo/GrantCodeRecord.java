@@ -14,6 +14,7 @@ public class GrantCodeRecord {
         GrantCodeRecordConverter.toJson(this, json);
         return json;
     }
+    private String requestId;
     /**
      * 自增id
      */
@@ -95,6 +96,14 @@ public class GrantCodeRecord {
     private String cashprizePhone;
 
     private Long enterpriseId;
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
 
     public Long getId() {
         return id;

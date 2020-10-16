@@ -8,20 +8,27 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.SQLClient;
 import io.vertx.ext.sql.SQLConnection;
+
+
 import java.util.List;
 
 public class SqlServiceImpl implements SqlService {
 
     private SqlClient client;
 
+    private Logger logger = LoggerFactory.getLogger(SqlServiceImpl.class);
+
     public SqlServiceImpl(Vertx vertx, JSONArray dataSource){
         client = new SqlClient(vertx,dataSource);
     }
     @Override
     public void selectList(JsonArray params, String sql, String database, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
+        logger.info("{} [selectList] recv sql:{} params:{}", sql,params.toString());
         SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             if (res.succeeded()) {
@@ -44,6 +51,7 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public void delete(JsonArray params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
+        logger.info("{} [delete] recv sql:{} params:{}", sql,params.toString());
         SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             SQLConnection connection = res.result();
@@ -64,6 +72,7 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public void update(JsonArray params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
+        logger.info("{} [update] recv sql:{} params:{}", sql,params.toString());
         SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             SQLConnection connection = res.result();
@@ -84,6 +93,7 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public void insert(JsonArray params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
+        logger.info("{} [insert] recv sql:{} params:{}", sql,params.toString());
         SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             SQLConnection connection = res.result();
@@ -104,6 +114,7 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public void batchOperation(List<JsonArray> params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
+        logger.info("{} [batchOperation] recv sql:{} params:{}", sql,params.toString());
         SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             SQLConnection connection = res.result();

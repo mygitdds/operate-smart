@@ -15,6 +15,7 @@ public class CreateResourceReq {
         CreateResourceReqConverter.toJson(this, json);
         return json;
     }
+    private String requestId;
     /**
      * 企业id
      */
@@ -104,5 +105,13 @@ public class CreateResourceReq {
 
     public void setOperator(String operator) {
         this.operator = operator;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 }

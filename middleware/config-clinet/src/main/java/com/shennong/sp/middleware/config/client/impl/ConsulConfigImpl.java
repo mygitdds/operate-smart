@@ -5,9 +5,14 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.serviceproxy.ServiceException;
 
 public class ConsulConfigImpl implements ConsulConfigClient {
+
+
+    private Logger logger = LoggerFactory.getLogger(ConsulConfigImpl.class);
 
     private ConsulClientBuilder consulClientBuilder;
     private Vertx vertx;
@@ -21,6 +26,7 @@ public class ConsulConfigImpl implements ConsulConfigClient {
         //获取配置信息
         consulClientBuilder.getConsulClient().getValue(interfaceName, res -> {
             if (res.succeeded()) {
+                logger.info("{} [getConfig] recv req:{}", interfaceName);
                 resultHandler.handle(Future.succeededFuture(res.result().getValue()));
             } else {
                 ServiceException.fail(1002, res.cause().getMessage());

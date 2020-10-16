@@ -1,6 +1,10 @@
-nohup java -jar  middleware-mysql-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-db –worker -cluster > dblog.file  2>&1 &
+nohup java -jar  middleware-mysql-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-db –worker -ha > app.file  2>&1 &
 
-nohup java -jar middleware-config-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-config –worker -cluster  > configlog.file  2>&1 &
+nohup java -jar middleware-config-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-config –worker -ha  > app.file  2>&1 &
+
+nohup java -jar resource-service-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-resource –worker -ha  > app.file  2>&1 &
+
+nohup java -jar sass-web-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-sass-web –worker -ha  > app.file  2>&1 &
 
 
 nohup java -jar zpw-2.2.5.RELEASE.jar  > log.file  2>&1 &
@@ -14,3 +18,12 @@ export VERTX_HOME=/usr/local/vertx/vertx
 export PATH=$VERTX_HOME/bin:$PATH
 
 nohup java -jar xxx.jar &
+
+
+
+#项目jar包名称
+APP_NAME=middleware-config-client-1.0.0-SNAPSHOT-fat.jar
+#停止这个项目
+vertx stop $APP_NAME
+#启动项目
+nohup java -jar $APP_NAME start-Dvertx-id=smart-config –worker -ha &

@@ -1,14 +1,14 @@
-package com.shennong.sp.sass_web.handler.resource;
+package com.shennong.sp.sass.web.handler.resource;
 
 import com.alibaba.fastjson.JSON;
 import com.shennong.sp.commom.http.HttpResponseEntity;
 import com.shongnong.sp.resource.service.ResourceService;
 import com.shongnong.sp.resource.vo.CreateResourceReq;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
-
 
 public class ResourceHandler {
     private Router router;
@@ -22,7 +22,7 @@ public class ResourceHandler {
         createResource();
     }
     public void createResource(){
-        router.route("/resource/createResource").handler(routingContext -> {
+        router.route(HttpMethod.POST,"/resource/createResource").handler(routingContext -> {
             //拿到rsp
             HttpServerResponse response = routingContext.response();
            //获取到参数，转成

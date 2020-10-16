@@ -1,4 +1,4 @@
-package com.shennong.sp.sass_web.handler.auth;
+package com.shennong.sp.sass.web.handler.auth;
 import io.vertx.core.Handler;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.spi.cluster.ClusterManager;
