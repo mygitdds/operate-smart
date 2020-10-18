@@ -30,16 +30,19 @@ public class ResourceHandler {
             //拿到rsp
             HttpServerResponse response = routingContext.response();
            //获取到参数，转成
-           JsonObject jsonObject = routingContext.getBodyAsJson();
-            CreateResourceReq resource =JSON.parseObject(jsonObject.toString(),CreateResourceReq.class);
-            resourceService.createResource(resource,result->{
+            //获取到的参数是+
+            logger.info(routingContext.getBodyAsJson().toString());
+            JsonObject jsonObject = routingContext.getBodyAsJson();
+            response.write(HttpResponseEntity.suss());
+           /* CreateResourceReq resource =JSON.parseObject(jsonObject.toString(),CreateResourceReq.class);*/
+            /*resourceService.createResource(resource,result->{
                 if(result.succeeded()){
                    // response.write()
                     response.write(HttpResponseEntity.suss());
                 }else {
                     response.write(HttpResponseEntity.fail(result.cause().getLocalizedMessage()));
                 }
-            });
+            });*/
         });
     }
 }

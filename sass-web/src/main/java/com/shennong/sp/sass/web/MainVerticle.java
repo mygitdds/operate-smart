@@ -37,6 +37,6 @@ public class MainVerticle extends AbstractVerticle {
     if(list != null){
         logger.info("route的数量是="+list.get(0).getPath());
     }
-    server.requestHandler(router).listen(8080);
+    server.requestHandler(router).listen(8081);
   }
 }
