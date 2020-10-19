@@ -5,6 +5,7 @@ import com.shennong.sp.sass.web.handler.resource.ResourceHandler;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.core.spi.cluster.ClusterManager;
@@ -30,13 +31,23 @@ public class MainVerticle extends AbstractVerticle {
     logger.info("node节点是="+node);*/
    ResourceHandler resourceHandler = new ResourceHandler();
     HttpServer server = vertx.createHttpServer();
-    Router router = Router.router(vertx);
+    /*Router router = Router.router(vertx);
     //router.route().handler(new Interceptor(mgr));
     resourceHandler.init(router,vertx);
+
     List<Route> list =router.getRoutes();
     if(list != null){
         logger.info("route的数量是="+list.get(0).getPath());
-    }
-    server.requestHandler(router).listen(8080);
+    }*/
+      server.requestHandler(request -> {
+
+          // 所有的请求都会调用这个处理器处理
+          HttpServerResponse response = request.response();
+          response.putHeader("content-type", "text/plain");
+
+          // 写入响应并结束处理
+          response.end("Hello World!");
+      });
+      server.listen(8080);
   }
 }

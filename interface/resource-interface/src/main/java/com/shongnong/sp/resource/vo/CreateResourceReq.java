@@ -3,8 +3,6 @@ package com.shongnong.sp.resource.vo;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 
-
-
 @DataObject(generateConverter = true)
 public class CreateResourceReq {
     public CreateResourceReq(JsonObject obj){
