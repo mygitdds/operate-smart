@@ -6,6 +6,7 @@ import com.shongnong.sp.resource.service.ResourceService;
 import com.shongnong.sp.resource.vo.CreateResourceReq;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -29,17 +30,23 @@ public class ResourceHandler {
         router.route(HttpMethod.POST,"/resource/createResource").handler(routingContext -> {
             //拿到rsp
             HttpServerResponse response = routingContext.response();
+            String request = routingContext.request().getParam("test");
            //获取到参数，转成
-           JsonObject jsonObject = routingContext.getBodyAsJson();
-            CreateResourceReq resource =JSON.parseObject(jsonObject.toString(),CreateResourceReq.class);
-            resourceService.createResource(resource,result->{
+            //获取到的参数是+
+            logger.info("来过了"+request);
+            logger.info("body="+routingContext.getBodyAsString());
+            response.putHeader("content-type", "text/plain");
+            response.write(HttpResponseEntity.suss(request));
+            response.end();
+           /* CreateResourceReq resource =JSON.parseObject(jsonObject.toString(),CreateResourceReq.class);*/
+            /*resourceService.createResource(resource,result->{
                 if(result.succeeded()){
                    // response.write()
                     response.write(HttpResponseEntity.suss());
                 }else {
                     response.write(HttpResponseEntity.fail(result.cause().getLocalizedMessage()));
                 }
-            });
+            });*/
         });
     }
 }
