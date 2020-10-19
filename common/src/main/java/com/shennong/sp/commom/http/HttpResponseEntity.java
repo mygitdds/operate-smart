@@ -11,7 +11,7 @@ public class HttpResponseEntity {
     private String msg;
     private Object object;
 
-    public static String suss(Object object){
+    public static String suss(Object object) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         httpResponseEntity.setCode(1001);
         httpResponseEntity.setMsg("访问成功");
@@ -19,17 +19,24 @@ public class HttpResponseEntity {
         return JSON.toJSONString(httpResponseEntity);
     }
 
-    public static String suss(){
+    public static String suss() {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         httpResponseEntity.setCode(1001);
         httpResponseEntity.setMsg("访问成功");
         return JSON.toJSONString(httpResponseEntity);
     }
 
-    public static String fail(String msg){
+    public static String fail(String msg) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         httpResponseEntity.setCode(1002);
         httpResponseEntity.setMsg(msg);
+        return JSON.toJSONString(httpResponseEntity);
+    }
+
+    public static String NoAuth() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        httpResponseEntity.setCode(1003);
+        httpResponseEntity.setMsg("NO_Auth");
         return JSON.toJSONString(httpResponseEntity);
     }
 

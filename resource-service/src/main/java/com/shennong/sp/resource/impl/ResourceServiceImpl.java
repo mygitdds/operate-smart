@@ -41,7 +41,7 @@ public class ResourceServiceImpl implements ResourceService {
     public void createResource(CreateResourceReq resource, Handler<AsyncResult<Void>> resultHandler) {
         //主资源，不需要做幂等性判断
         //构建sql与参数通过ResourceSqlBuild
-        logger.info("{} [createResource] recv reqId:{} req:{}",resource.getRequestId(), JSON.toJSONString(resource));
+        logger.info("{} [createResource]", JSON.toJSONString(resource));
         JsonArray params = new JsonArray();
         String sql = resourceSqlBuild.createResourceSql(resource, params);
         sqlService.insert(params, sql, Constant.RESOURCE_DB, result -> {

@@ -36,6 +36,13 @@ public class SqlClient {
 
 
     public  SQLClient getSqlClient(String database){
+        SQLClient client =sqlClientMap.get(database);
+        if(client != null){
+            System.out.println("不是空的");
+        }else {
+            System.out.println("是空的");
+        }
+
         return sqlClientMap.get(database);
     }
 }

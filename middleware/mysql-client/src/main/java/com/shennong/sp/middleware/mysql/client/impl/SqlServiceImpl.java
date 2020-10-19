@@ -28,9 +28,8 @@ public class SqlServiceImpl implements SqlService {
     }
     @Override
     public void selectList(JsonArray params, String sql, String database, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
-        logger.info("{} [selectList] recv sql:{} params:{}", sql,params.toString());
-        SQLClient sqlClient =client.getSqlClient(database);
-        sqlClient.getConnection(res -> {
+
+        client.getSqlClient(database).getConnection(res -> {
             if (res.succeeded()) {
                 SQLConnection connection = res.result();
                 connection.queryWithParams(sql, params, result -> {
@@ -93,9 +92,8 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public void insert(JsonArray params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
-        logger.info("{} [insert] recv sql:{} params:{}", sql,params.toString());
-        SQLClient sqlClient =client.getSqlClient(database);
-        sqlClient.getConnection(res -> {
+
+        client.getSqlClient(database).getConnection(res -> {
             SQLConnection connection = res.result();
             if (res.succeeded()) {
                 connection.updateWithParams(sql, params, result -> {

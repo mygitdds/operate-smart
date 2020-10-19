@@ -1,10 +1,7 @@
 package com.shennong.sp.sass.web;
-
 import com.alibaba.fastjson.JSON;
-import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
-import com.shennong.sp.sass.web.handler.auth.Interceptor;
 import com.shennong.sp.sass.web.handler.resource.ResourceHandler;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
@@ -13,6 +10,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 
 import java.util.List;
@@ -31,7 +29,7 @@ public class MainVerticle extends AbstractVerticle {
         ResourceHandler resourceHandler = new ResourceHandler();
         HttpServer server = vertx.createHttpServer();
         Router router = Router.router(vertx);
-        //router.route().handler(new Interceptor(mgr));
+        router.route().handler(BodyHandler.create());
         resourceHandler.init(router, vertx);
         server.requestHandler(router).listen(8080);
         startPromise.complete();

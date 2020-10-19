@@ -78,7 +78,11 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-mysql-postgresql-client</artifactId>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.24</version>
+    </dependency>
     <dependency>
       <groupId>com.alibaba</groupId>
       <artifactId>fastjson</artifactId>

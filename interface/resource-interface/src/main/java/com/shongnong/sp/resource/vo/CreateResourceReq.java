@@ -13,6 +13,8 @@ public class CreateResourceReq {
         CreateResourceReqConverter.toJson(this, json);
         return json;
     }
+
+
     private String requestId;
     /**
      * 企业id

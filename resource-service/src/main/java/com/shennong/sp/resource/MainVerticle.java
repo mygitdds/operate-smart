@@ -30,7 +30,6 @@ public class MainVerticle extends AbstractVerticle {
     MessageConsumer<JsonObject> consumer = binder
             .setAddress("operate-smart-resource")
             .register(ResourceService.class, resourceService);
-    binder.unregister(consumer);
-
+    startPromise.complete();
   }
 }

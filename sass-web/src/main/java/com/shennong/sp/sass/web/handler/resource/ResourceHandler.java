@@ -18,34 +18,33 @@ public class ResourceHandler {
     private Vertx vertx;
     private ResourceService resourceService;
     private Logger logger = LoggerFactory.getLogger(ResourceHandler.class);
+
     //获取一个代理
-    public void init(Router router,Vertx vertx){
+    public void init(Router router, Vertx vertx) {
         this.router = router;
         this.vertx = vertx;
-        this.resourceService = ResourceService.createProxy(vertx,"operate-smart-resource");
+        this.resourceService = ResourceService.createProxy(vertx, "operate-smart-resource");
         createResource();
     }
-    public void createResource(){
+
+    public void createResource() {
         logger.info("启动执行了create");
-        router.route(HttpMethod.POST,"/resource/createResource").handler(routingContext -> {
+        router.route(HttpMethod.POST, "/resource/createResource").handler(routingContext -> {
             //拿到rsp
             HttpServerResponse response = routingContext.response();
-            String request = routingContext.request().getParam("test");
-           //获取到参数，转成
-            //获取到的参数是+
-            logger.info("来过了"+request);
-            logger.info("body="+JSON.toJSONString(routingContext.getBodyAsJson()));
-            response.putHeader("content-type", "application/json");;
-            response.end(HttpResponseEntity.suss());
-            //CreateResourceReq resource =JSON.parseObject(jsonObject.toString(),CreateResourceReq.class);*/
-           /*resourceService.createResource(resource,result->{
-                if(result.succeeded()){
-                   // response.write()
-                    response.write(HttpResponseEntity.suss());
-                }else {
-                    response.write(HttpResponseEntity.fail(result.cause().getLocalizedMessage()));
+            response.putHeader("content-type", "application/json");
+            CreateResourceReq resource = new CreateResourceReq(routingContext.getBodyAsJson());
+            logger.info("转化后的参数"+resource.toJson().toString());
+            resourceService.createResource(resource, result -> {
+                if (result.succeeded()) {
+                    // response.write()
+                    logger.info("执行成功");
+                    response.end(HttpResponseEntity.suss());
+                } else {
+                    logger.info("执行失败"+result.cause().getMessage());
+                    response.end(HttpResponseEntity.fail(result.cause().getMessage()));
                 }
-            });*/
+            });
         });
     }
 }
