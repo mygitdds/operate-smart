@@ -31,6 +31,7 @@ public class Interceptor implements Handler<RoutingContext> {
                     //校验该用户是否有访问，该接口的权限目前跳过
                    String addr = routingContext.request().absoluteURI();
                 }
+                System.out.println("来获取map了");
             }
         });
     }

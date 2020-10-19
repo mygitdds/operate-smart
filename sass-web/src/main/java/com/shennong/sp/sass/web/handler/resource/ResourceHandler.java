@@ -34,12 +34,11 @@ public class ResourceHandler {
            //获取到参数，转成
             //获取到的参数是+
             logger.info("来过了"+request);
-            logger.info("body="+routingContext.getBodyAsString());
-            response.putHeader("content-type", "text/plain");
-            response.write(HttpResponseEntity.suss(request));
-            response.end();
-           /* CreateResourceReq resource =JSON.parseObject(jsonObject.toString(),CreateResourceReq.class);*/
-            /*resourceService.createResource(resource,result->{
+            logger.info("body="+JSON.toJSONString(routingContext.getBodyAsJson()));
+            response.putHeader("content-type", "application/json");;
+            response.end(HttpResponseEntity.suss());
+            //CreateResourceReq resource =JSON.parseObject(jsonObject.toString(),CreateResourceReq.class);*/
+           /*resourceService.createResource(resource,result->{
                 if(result.succeeded()){
                    // response.write()
                     response.write(HttpResponseEntity.suss());

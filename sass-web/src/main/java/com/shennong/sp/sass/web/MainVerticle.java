@@ -1,53 +1,39 @@
 package com.shennong.sp.sass.web;
+
+import com.alibaba.fastjson.JSON;
 import com.hazelcast.config.Config;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
 import com.shennong.sp.sass.web.handler.auth.Interceptor;
 import com.shennong.sp.sass.web.handler.resource.ResourceHandler;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.core.spi.cluster.ClusterManager;
-import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
-import io.vertx.spi.cluster.hazelcast.ConfigUtil;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 
 import java.util.List;
+import java.util.Set;
 
 public class MainVerticle extends AbstractVerticle {
-  private Logger logger = LoggerFactory.getLogger(MainVerticle.class);
-  @Override
-  public void start(Promise<Void> startPromise) throws Exception {
-    //获取一个集群实例
-    /*Config hazelcastConfig = ConfigUtil.loadConfig();
-    hazelcastConfig.getGroupConfig()
-            .setName("dev")
-            .setPassword("dev-pass");
-    ClusterManager mgr = new HazelcastClusterManager(hazelcastConfig);
-    mgr.setVertx(vertx);
-    String node =mgr.getNodeID();
-    logger.info("node节点是="+node);*/
-   ResourceHandler resourceHandler = new ResourceHandler();
-    HttpServer server = vertx.createHttpServer();
-    /*Router router = Router.router(vertx);
-    //router.route().handler(new Interceptor(mgr));
-    resourceHandler.init(router,vertx);
+    private Logger logger = LoggerFactory.getLogger(MainVerticle.class);
 
-    List<Route> list =router.getRoutes();
-    if(list != null){
-        logger.info("route的数量是="+list.get(0).getPath());
-    }*/
-      server.requestHandler(request -> {
-
-          // 所有的请求都会调用这个处理器处理
-          HttpServerResponse response = request.response();
-          response.putHeader("content-type", "text/plain");
-
-          // 写入响应并结束处理
-          response.end("Hello World!");
-      });
-      server.listen(8080);
-  }
+    @Override
+    public void start(Promise<Void> startPromise) throws Exception {
+        //获取一个集群实例
+        Set<HazelcastInstance> instances = Hazelcast.getAllHazelcastInstances();
+        ClusterManager mgr = new HazelcastClusterManager(instances.stream().findFirst().get());
+        List<String> node =mgr.getNodes();
+        logger.info("集群是可以用的"+ JSON.toJSONString(node));
+        ResourceHandler resourceHandler = new ResourceHandler();
+        HttpServer server = vertx.createHttpServer();
+        Router router = Router.router(vertx);
+        //router.route().handler(new Interceptor(mgr));
+        resourceHandler.init(router, vertx);
+        server.requestHandler(router).listen(8080);
+        startPromise.complete();
+    }
 }
