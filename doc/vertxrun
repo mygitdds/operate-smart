@@ -1,10 +1,10 @@
 nohup java -jar  middleware-mysql-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-db –worker -ha > app.file  2>&1 &
 
-nohup java -jar middleware-config-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-config –worker -ha  > app.file  2>&1 &
+nohup java -jar middleware-config-client-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-config –worker -ha   > app.file  2>&1 &
 
-nohup java -jar resource-service-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-resource –worker -ha  > app.file  2>&1 &
+nohup java -jar resource-service-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-resource –worker -ha    > app.file  2>&1 &
 
-nohup java -jar sass-web-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-sass-web –worker -ha  > app.file  2>&1 &
+nohup java -jar sass-web-1.0.0-SNAPSHOT-fat.jar start-Dvertx-id=smart-sass-web –worker -cluster -instances 4  > app.file  2>&1 &
 
 
 nohup java -jar zpw-2.2.5.RELEASE.jar  > log.file  2>&1 &

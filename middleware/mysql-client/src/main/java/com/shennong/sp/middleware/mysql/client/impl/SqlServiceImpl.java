@@ -27,8 +27,8 @@ public class SqlServiceImpl implements SqlService {
         client = new SqlClient(vertx,dataSource);
     }
     @Override
-    public void selectList(JsonArray params, String sql, String database, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
-
+    public void selectList(JsonArray params, String sql, String database, Handler<AsyncResult<JsonArray>> resultHandler) {
+        logger.info(" [selectList] sql={} params={}",sql,params.toString());
         client.getSqlClient(database).getConnection(res -> {
             if (res.succeeded()) {
                 SQLConnection connection = res.result();
@@ -36,21 +36,24 @@ public class SqlServiceImpl implements SqlService {
                     if (result.succeeded()) {
                         // Get the result set
                         ResultSet resultSet = result.result();
-                        resultHandler.handle(Future.succeededFuture(resultSet.getRows()));
+
+                        resultHandler.handle(Future.succeededFuture(resultSet.getOutput()));
                     } else {
                         // Failed!
                         resultHandler.handle(Future.failedFuture(result.cause()));
                     }
+                    connection.close();
                 });
             } else {
                 resultHandler.handle(Future.failedFuture(res.cause()));
             }
+
         });
     }
 
     @Override
     public void delete(JsonArray params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
-        logger.info("{} [delete] recv sql:{} params:{}", sql,params.toString());
+        logger.info("[delete] sql:{} params:{}", sql,params.toString());
         SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             SQLConnection connection = res.result();
@@ -66,12 +69,13 @@ public class SqlServiceImpl implements SqlService {
             } else {
                 resultHandler.handle(Future.failedFuture(res.cause()));
             }
+            connection.close();
         });
     }
 
     @Override
     public void update(JsonArray params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
-        logger.info("{} [update] recv sql:{} params:{}", sql,params.toString());
+        logger.info(" [update] sql:{} params:{}", sql,params.toString());
         SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             SQLConnection connection = res.result();
@@ -87,12 +91,13 @@ public class SqlServiceImpl implements SqlService {
             } else {
                 resultHandler.handle(Future.failedFuture(res.cause()));
             }
+            connection.close();
         });
     }
 
     @Override
     public void insert(JsonArray params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
-
+        logger.info("sql={} params={}",sql,params.toString());
         client.getSqlClient(database).getConnection(res -> {
             SQLConnection connection = res.result();
             if (res.succeeded()) {
@@ -107,12 +112,13 @@ public class SqlServiceImpl implements SqlService {
             } else {
                 resultHandler.handle(Future.failedFuture(res.cause()));
             }
+            connection.close();
         });
     }
 
     @Override
     public void batchOperation(List<JsonArray> params, String sql, String database, Handler<AsyncResult<Void>> resultHandler) {
-        logger.info("{} [batchOperation] recv sql:{} params:{}", sql,params.toString());
+        logger.info(" [batchOperation] ", sql,params.toString());
         SQLClient sqlClient =client.getSqlClient(database);
         sqlClient.getConnection(res -> {
             SQLConnection connection = res.result();
@@ -128,6 +134,7 @@ public class SqlServiceImpl implements SqlService {
             } else {
                 resultHandler.handle(Future.failedFuture(res.cause()));
             }
+            connection.close();
         });
     }
 }

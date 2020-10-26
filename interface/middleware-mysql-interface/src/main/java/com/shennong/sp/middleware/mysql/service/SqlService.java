@@ -17,7 +17,7 @@ public interface SqlService {
         return new SqlServiceVertxEBProxy(vertx, address);
     }
     //查询sql 实现选择器模式。
-    void selectList(JsonArray params, String sql, String database,Handler<AsyncResult<List<JsonObject>>> resultHandler);
+    void selectList(JsonArray params, String sql, String database,Handler<AsyncResult<JsonArray>> resultHandler);
     //删除sql
     void delete(JsonArray params,String sql,String database,Handler<AsyncResult<Void>> resultHandler);
     //更新sql

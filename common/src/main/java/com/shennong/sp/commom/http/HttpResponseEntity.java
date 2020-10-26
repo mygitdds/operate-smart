@@ -26,6 +26,13 @@ public class HttpResponseEntity {
         return JSON.toJSONString(httpResponseEntity);
     }
 
+    public static String suss(String msg) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        httpResponseEntity.setCode(1001);
+        httpResponseEntity.setMsg(msg);
+        return JSON.toJSONString(httpResponseEntity);
+    }
+
     public static String fail(String msg) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         httpResponseEntity.setCode(1002);

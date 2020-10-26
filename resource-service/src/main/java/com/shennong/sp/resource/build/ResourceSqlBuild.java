@@ -1,9 +1,10 @@
 package com.shennong.sp.resource.build;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.shennong.sp.commom.util.SqlUtil;
 import com.shongnong.sp.resource.vo.*;
 import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.List;
@@ -14,13 +15,14 @@ import java.util.UUID;
  * resource的sql构造
  */
 public class ResourceSqlBuild {
+    private Logger logger = LoggerFactory.getLogger(ResourceSqlBuild.class);
     public String createResourceSql(CreateResourceReq resource, JsonArray params){
-        String resourceJson = JSONObject.toJSONString(resource);
-        JSONObject jsonObject = JSON.parseObject(resourceJson);
+        JsonObject jsonObject = resource.toJson();
         Map<String,String> para = new HashMap<>();
         createParaMap(para);
         String table = "t_smart_resource";
         String sql = SqlUtil.createSql(table,para,jsonObject,params);
+        logger.info(sql);
         return sql;
     }
     private void createParaMap(Map<String,String> para){
@@ -58,9 +60,9 @@ public class ResourceSqlBuild {
         codePara.put("type", "type");
         codePara.put("grant_type", "grantType");
         codePara.put("brush_count", "brushCount");
+        codePara.put("batch_code","batchCode");
         batch.setClaimRulesString(batch.getClaimRules().toString());
-        String codeJson = JSONObject.toJSONString(batch);
-        JSONObject jsonObject = JSON.parseObject(codeJson);
+        JsonObject jsonObject = batch.toJson();
         String table = "t_smart_resource";
         return SqlUtil.createSql(table, codePara, jsonObject, params);
     }
@@ -138,7 +140,7 @@ public class ResourceSqlBuild {
         int number = batch.getCodeNumber();
         for(int i=0;i<number;i++){
             JsonArray jsonArray = new JsonArray();
-            jsonArray.add(batch.getId());
+            jsonArray.add(batch.getBatchCode());
             String uuid = UUID.randomUUID().toString().trim().replaceAll("-", "");
             jsonArray.add(batch.getEnterpriseId());
             jsonArray.add(batch.getResourceId());
@@ -156,5 +158,14 @@ public class ResourceSqlBuild {
         params.add(code);
         return sql.toString();
     }
+    //查询code
+    public String getCode(String code,JsonArray params){
+        JsonArray paramsList = params;
+        StringBuilder sql = new StringBuilder();
+        sql.append("select code.code as code,code.update_time as updateTime ,batch.claim_rules as claimRules from t_smart_code code left join t_smart_batch_code batch where code.code =? and code.code_status=1");
+        params.add(code);
+        return sql.toString();
+    }
+
 
 }

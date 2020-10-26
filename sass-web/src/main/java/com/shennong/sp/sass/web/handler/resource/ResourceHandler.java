@@ -1,14 +1,12 @@
 package com.shennong.sp.sass.web.handler.resource;
 
-import com.alibaba.fastjson.JSON;
 import com.shennong.sp.commom.http.HttpResponseEntity;
 import com.shongnong.sp.resource.service.ResourceService;
+import com.shongnong.sp.resource.vo.BatchCode;
 import com.shongnong.sp.resource.vo.CreateResourceReq;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
@@ -26,9 +24,9 @@ public class ResourceHandler {
         this.resourceService = ResourceService.createProxy(vertx, "operate-smart-resource");
         createResource();
     }
-
+    //创建主资源
     public void createResource() {
-        logger.info("启动执行了create");
+        logger.info("添加了handler_createResource");
         router.route(HttpMethod.POST, "/resource/createResource").handler(routingContext -> {
             //拿到rsp
             HttpServerResponse response = routingContext.response();
@@ -38,10 +36,29 @@ public class ResourceHandler {
             resourceService.createResource(resource, result -> {
                 if (result.succeeded()) {
                     // response.write()
-                    logger.info("执行成功");
+                    logger.info("resourceService.createResource执行成功");
                     response.end(HttpResponseEntity.suss());
                 } else {
-                    logger.info("执行失败"+result.cause().getMessage());
+                    logger.info("resourceService.createResource执行失败"+result.cause().getMessage());
+                    response.end(HttpResponseEntity.fail(result.cause().getMessage()));
+                }
+            });
+        });
+    }
+
+    //创建批次
+    public void createBatchCode(){
+        logger.info("添加了handler_createBatchCode");
+        router.route(HttpMethod.POST, "/resource/createBatchCode").handler(routingContext -> {
+            HttpServerResponse response = routingContext.response();
+            response.putHeader("content-type", "application/json");
+            BatchCode batch = new BatchCode(routingContext.getBodyAsJson());
+            logger.info("转化后的参数"+batch.toJson().toString());
+            resourceService.createBatchCode(batch,result->{
+                if (result.succeeded()) {
+                    response.end(HttpResponseEntity.suss("卷码生成成功请在5分钟后使用"));
+                }else {
+                    logger.info("resourceService.createBatchCode执行失败"+result.cause().getMessage());
                     response.end(HttpResponseEntity.fail(result.cause().getMessage()));
                 }
             });

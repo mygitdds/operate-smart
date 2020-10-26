@@ -2,6 +2,7 @@ package com.shennong.sp.sass.web;
 import com.alibaba.fastjson.JSON;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.shennong.sp.sass.web.handler.auth.Interceptor;
 import com.shennong.sp.sass.web.handler.resource.ResourceHandler;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
@@ -29,7 +30,7 @@ public class MainVerticle extends AbstractVerticle {
         ResourceHandler resourceHandler = new ResourceHandler();
         HttpServer server = vertx.createHttpServer();
         Router router = Router.router(vertx);
-        router.route().handler(BodyHandler.create());
+        router.route().handler(BodyHandler.create()).handler(new Interceptor(mgr));
         resourceHandler.init(router, vertx);
         server.requestHandler(router).listen(8080);
         startPromise.complete();

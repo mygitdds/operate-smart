@@ -24,6 +24,8 @@ public class BatchCode {
      */
     private String requestId;
 
+    private String batchCode;
+
     /**
      * 自增id
      */
@@ -62,6 +64,7 @@ public class BatchCode {
      * 锁定时间
      */
     private Integer lockTime;
+
 
     private Integer grantNum;
     private Integer invalidNum;
@@ -181,5 +184,13 @@ public class BatchCode {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getBatchCode() {
+        return batchCode;
+    }
+
+    public void setBatchCode(String batchCode) {
+        this.batchCode = batchCode;
     }
 }
