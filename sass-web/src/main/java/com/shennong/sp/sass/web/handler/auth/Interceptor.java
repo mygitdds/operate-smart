@@ -1,6 +1,7 @@
 package com.shennong.sp.sass.web.handler.auth;
 import io.vertx.core.Handler;
 import io.vertx.core.http.Cookie;
+import io.vertx.core.shareddata.AsyncMap;
 import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,10 @@ public class Interceptor implements Handler<RoutingContext> {
         this.mgr = mgr;
     }
 
+    /**
+     * 校验是否是登录过的。实现一个过滤器，
+     * @param routingContext
+     */
     @Override
     public void handle(RoutingContext routingContext) {
         //拿到cookie
@@ -25,13 +30,17 @@ public class Interceptor implements Handler<RoutingContext> {
         //在Hazelcast中去寻找相应的值
         mgr.getAsyncMap("session",map->{
             if(map.succeeded()){
-                Map<String,String> sessionMap = (Map<String, String>) map.result();
-                String session = sessionMap.get(sessionKey);
-                if(StringUtils.isNotEmpty(session)){
-                    //校验该用户是否有访问，该接口的权限目前跳过
-                   String addr = routingContext.request().absoluteURI();
-                }
-                System.out.println("来获取map了");
+                AsyncMap<Object,Object> sessionMap = map.result();
+                sessionMap.get(sessionKey,result->{
+                    String session =(String) result.result();
+                    if(StringUtils.isNotEmpty(session)){
+                        //校验该用户是否有访问，该接口的权限目前跳过
+                        String addr = routingContext.request().absoluteURI();
+                        //判断该接口是否有权限使用
+                    }
+                    System.out.println("来获取map了");
+                });
+
             }
         });
     }
