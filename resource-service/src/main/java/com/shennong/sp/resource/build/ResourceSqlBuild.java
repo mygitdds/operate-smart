@@ -41,7 +41,7 @@ public class ResourceSqlBuild {
         String table = "t_smart_resource";
         params.add(selectResourceReq.getEnterpriseId());
         sql.append(table);
-        sql.append(" where enterprise_id = ?  limit ?,?");
+        sql.append(" where enterprise_id = ? ");
         if(StringUtils.isNotEmpty(selectResourceReq.getResourceName())){
             sql.append("and resource_name =? ");
             params.add(selectResourceReq.getResourceName());
